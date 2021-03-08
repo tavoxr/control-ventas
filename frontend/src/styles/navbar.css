@@ -49,3 +49,9 @@ body{
 #hidden{
 	display: none!important;
 }
+
+.linked{
+	text-decoration: none;
+	color: rgb(238, 234, 234);
+	font-size: 20px;
+}

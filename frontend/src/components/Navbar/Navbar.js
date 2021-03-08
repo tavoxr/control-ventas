@@ -55,15 +55,15 @@ render() {
   const authMenu = (
     <React.Fragment>
       <li className="nav-item">
-    <Link  to="/products" >My Products</Link>
+    <Link className="linked" to="/products" >My Products</Link>
     </li>
     <li className="nav-item">
-    <Link   to="/store">Store</Link>
+    <Link  className="linked" to="/store">Store</Link>
     </li>
     <li className="nav-item">
-    <Link to="/cart" id="cartLink" ><i id="cart-icon" className="fas fa-shopping-cart text-white"></i></Link>
+    <Link  to="/cart" id="cartLink" ><i id="cart-icon" className="fas fa-shopping-cart text-white"></i></Link>
     </li>
-    <p id="cart-total">0</p>
+    
     
     </React.Fragment>
   )

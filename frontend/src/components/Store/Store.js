@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getAllUsersProducts} from '../../redux/actions/store'
+import {updateItem} from '../../redux/actions/items'
 
 
 class Store extends React.Component{
@@ -9,6 +10,14 @@ class Store extends React.Component{
         this.props.getAllUsersProducts()
     }
 
+    addProducts=(id)=>{
+        let productId = id
+        let action = "add"
+        console.log('Product id:',productId, 'action:', action)
+
+        const product = {'ProductId': productId, 'action': action}
+        this.props.updateItem(product)
+    }
 
     render(){
         const productsList = this.props.allUsersProducts.map(product=>{
@@ -18,14 +27,14 @@ class Store extends React.Component{
                     <td>{product.price}</td>
                     <td><button 
                             className="btn btn-success"
-                            // onClick={ deleteProduct.bind(this,product.id)}
+                            onClick={ ()=>this.addProducts(product.id)}
                                 >Add to Cart</button>
                     </td>
-                    <td><button 
+                    {/* <td><button 
                             className="btn btn-danger"
                             // onClick={ deleteProduct.bind(this,product.id)}
                                 >Delete</button>
-                    </td>
+                    </td> */}
                 </tr>
                 )
         })
@@ -44,7 +53,7 @@ class Store extends React.Component{
                             <th scope="col">Product</th> 
                             <th scope="col">Price    </th> 
                             <th scope="col">Add to Cart</th> 
-                            <th scope="col">Delete</th>
+                            {/* <th scope="col">Delete</th> */}
                             
                         </tr>
                     </thead>
@@ -69,9 +78,10 @@ class Store extends React.Component{
 const ms2p = (state)=>{
     return{
         ...state.allUsersProducts,
+        updateItem: state.updateItem,
     
     }
 }
 
 
-export default connect(ms2p,{getAllUsersProducts})(Store)
+export default connect(ms2p,{getAllUsersProducts, updateItem})(Store)

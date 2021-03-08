@@ -15,3 +15,6 @@ export const CLEAR_LEADS = 'CLEAR_LEADS';
 export const GET_ALL_USERS_PRODUCTS = 'GET_ALL_USERS_PRODUCTS'
 export const GET_ITEMS = 'GET_ITEMS'
 export const GET_ORDERS = 'GET_ORDERS'
+export const UPDATE_ITEM = 'UPDATE_ITEM'
+export const PROCESS_ORDER = 'PROCESS_ORDER'
+export const TOTAL_ORDERS = 'TOTAL_ORDERS'

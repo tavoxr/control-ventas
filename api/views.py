@@ -1,10 +1,12 @@
+
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import serializers, status
 from .serializers import OrderItemSerializer, ProductSerializer, OrderSerializer
-from .models import Product ,Order
+from .models import Product ,Order, OrderItem
 from rest_framework import viewsets, permissions
+import json
 # Create your views here.
 
 
@@ -61,10 +63,70 @@ def getOrders(request):
     return Response([],status=status.HTTP_204_NO_CONTENT)
 
 
+  
+@api_view(['GET', 'POST'])
+def updateItem(request):
+    
+    if request.method == 'GET':
+      return Response('Item was added', status= status.HTTP_201_CREATED )
+
+    if request.method == 'POST':
+
+      d1 = json.dumps(request.data)
+      data = json.loads(d1) 
+      print('data', data)
+      productId = data['ProductId']
+      action = data['action']
+      print('action',action)
+      print('productId', productId)
+
+      user = request.user
+      product = Product.objects.get(id=productId)
+      order, created = Order.objects.get_or_create(user=user, complete=False)
+      orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
+
+      if action == 'add':
+        orderItem.quantity = (orderItem.quantity + 1)
+      elif action == 'remove':
+        orderItem.quantity = (orderItem.quantity - 1)
+      
+      
+      orderItem.save()
+      if orderItem.quantity <= 0:
+        orderItem.delete()
+
+      return Response('Item was added')
+      
+
+
+@api_view(['GET', 'POST'])
+def processOrder(request):
+
+  if request.method == 'POST':
+    d1 = json.dumps(request.data)
+    data = json.loads(d1) 
+
+    print('data', data)
+    user = request.user
+    order , created = Order.objects.get_or_create(user=user, complete=False)
+    total = data['get_cart_total']
+
+    if total == order.get_cart_total:
+      order.complete = True
+    order.save()
+
+  return Response('Order Completed')
 
 
 
+@api_view(['GET'])
+def totalOrders(request):
 
+  userId =request.user.id
+  orders = Order.objects.filter(user=userId)
+  serializer  =  OrderSerializer(orders, many=True)
+
+  return Response(serializer.data, status= status.HTTP_200_OK)
 
 
 

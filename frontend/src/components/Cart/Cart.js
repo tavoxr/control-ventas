@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import {connect} from 'react-redux'
 import {getItems} from '../../redux/actions/items'
 import {getAllUsersProducts} from '../../redux/actions/store'
-import  { getOrders}  from '../../redux/actions/orders'
+import  { getOrders, processOrder}  from '../../redux/actions/orders'
 
 
 class Cart extends React.Component{
@@ -20,12 +20,14 @@ class Cart extends React.Component{
 
     
 
-    // getProduct = (id)=>{
+    newOrder=()=>{
+        const {orders} = this.props
 
-        
+        const order =  orders.orders
+        console.log('order.total', orders.orders)
+        this.props.processOrder(order)
 
-    // }
-
+    }
     render(){
         
         const {allUsersProduct, orders} = this.props    
@@ -35,10 +37,10 @@ class Cart extends React.Component{
              
 
             return(
-                <tr key={item.id} >
+                <tr key={item.id}  className="text-center">
                     <td>{item.get_product_name}</td>
                     <td>{item.get_price}</td>
-                    <td>{item.quantity}</td>
+                    <td className="align-middle"><div class="d-flex flex-row justify-content-around">{item.quantity}<div class="d-flex flex-column justify-content-center"><i class="fas fa-sort-up"></i><i class="fas fa-sort-down"></i></div></div></td>
                     <td>{item.get_total}</td>
                 </tr>
                 )
@@ -50,7 +52,7 @@ class Cart extends React.Component{
             <div className="col-12">
                 <div className="card card-body ">
                     <div className="d-grid gap-2 d-md-block">
-                    <Link to="#" className="btn btn-outline-secondary btn-inblock"><i className="fas fa-arrow-left">  Continue Shopping</i></Link>
+                    <Link to="/store" className="btn btn-outline-secondary btn-inblock"><i className="fas fa-arrow-left">  Continue Shopping in the Store</i></Link>
                     </div>
                     <br/>
                     <div className="table-responsive mt-3">
@@ -59,7 +61,7 @@ class Cart extends React.Component{
                                 <tr>
                                     <th className="text-center" scope="col"><h5>Items: <strong>{orders.orders.get_cart_items}</strong></h5></th>
                                     <th className="text-center" scope="col"><h5>Total: <strong>${orders.orders.get_cart_total}</strong></h5></th>
-                                    <th scope="col" class="text-center" ><a href="{% url 'checkout' %}" class="btn btn-success btn-sm">Checkout</a></th>
+                                    <th scope="col" class="text-center" ><button onClick={()=>this.newOrder()} href="{% url 'checkout' %}" class="btn btn-success btn-sm">Checkout</button></th>
                                 </tr>
                             </thead>
                         </table>
@@ -103,10 +105,11 @@ const ms2p = (state)=>{
     return{
         ...state.items,
         allUsersProduct: state.allUsersProducts,
-        orders: state.orders
+        orders: state.orders,
+        processOrder: state.processOrder,
         
     }
 }
 
 
-export default connect(ms2p,{getItems,getAllUsersProducts, getOrders})(Cart)
+export default connect(ms2p,{getItems,getAllUsersProducts, getOrders, processOrder})(Cart)
