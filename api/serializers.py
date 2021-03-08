@@ -2,7 +2,7 @@ from django.db import models
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-from .models import Product
+from .models import Product, Order, OrderItem
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -11,7 +11,20 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class OrderSerializer(serializers.ModelSerializer):
+  get_cart_total =  serializers.ReadOnlyField()
+  get_cart_items = serializers.ReadOnlyField()
+  class Meta:
+    model = Order
+    fields= '__all__'
 
+class OrderItemSerializer(serializers.ModelSerializer):
+  get_total =serializers.ReadOnlyField()
+  get_price = serializers.ReadOnlyField()
+  get_product_name = serializers.ReadOnlyField()
+  class Meta:
+    model = OrderItem
+    fields='__all__'
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):

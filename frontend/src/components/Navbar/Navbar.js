@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../redux/actions/auth';
-
+import '../../styles/navbar.css'
 
 class Navbar extends React.Component{
 
@@ -48,11 +48,24 @@ render() {
           Logout
         </button>
       </li>
+     
     </ul>
   );
 
   const authMenu = (
-    <Link className="nav-item" to="/products" >My Products</Link>
+    <React.Fragment>
+      <li className="nav-item">
+    <Link  to="/products" >My Products</Link>
+    </li>
+    <li className="nav-item">
+    <Link   to="/store">Store</Link>
+    </li>
+    <li className="nav-item">
+    <Link to="/cart" id="cartLink" ><i id="cart-icon" className="fas fa-shopping-cart text-white"></i></Link>
+    </li>
+    <p id="cart-total">0</p>
+    
+    </React.Fragment>
   )
 
   const guestLinks = (
@@ -71,7 +84,7 @@ render() {
   );
 
   return (
-    <nav className="navbar navbar-expand-sm navbar-light bg-light">
+    <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
       <div className="container">
         <button
           className="navbar-toggler"

@@ -6,9 +6,14 @@ from knox import views as knox_views
 
 router = routers.DefaultRouter()
 router.register(r'products', ProductViewset, 'products')
+# router.register(r'all-products', allProducts , name='all-products')
+
 
 urlpatterns = [
     path('api/', include(router.urls) ),
+    path('api/all-products', allProducts, name='all-products'),
+    path('api/items', getItems, name='items'),
+    path('api/orders', getOrders, name='orders'),
     path('api/auth', include('knox.urls')),
     path('api/auth/register', RegisterAPI.as_view()),
     path('api/auth/login', LoginAPI.as_view()),

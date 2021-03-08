@@ -1,22 +1,72 @@
 from django.shortcuts import render
-# from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import serializers, status
-from .serializers import ProductSerializer
-from .models import Product
+from .serializers import OrderItemSerializer, ProductSerializer, OrderSerializer
+from .models import Product ,Order
 from rest_framework import viewsets, permissions
 # Create your views here.
 
 
-# @api_view(['GET'])
-# def productsList(request):
+@api_view(['GET'])
+def allProducts(request):
 
-#     products = Product.objects.all()
-#     serializer  =  ProductSerializer(products, many=True)
+    userId =request.user.id
+    products = Product.objects.exclude(owner=userId)
+    serializer  =  ProductSerializer(products, many=True)
 
-#     print('list', serializer.data)
 
-#     return Response(serializer.data, status= status.HTTP_200_OK)
+    print('list', serializer.data)
+
+    return Response(serializer.data, status= status.HTTP_200_OK)
+
+
+
+@api_view(['GET'])
+def getItems(request):
+
+  if request.user.is_authenticated:
+    user = request.user
+
+    # orders = Order.objects.all()
+    order, created  =Order.objects.get_or_create(user=user, complete=False)
+    items = order.orderitem_set.all()
+
+    print('request.user', request.user.id)
+    print('items', items)
+
+    serializer = OrderItemSerializer(items,  many=True)
+    
+    return Response(serializer.data, status=status.HTTP_200_OK)
+  else:
+    return Response([],status=status.HTTP_204_NO_CONTENT)
+
+    
+@api_view(['GET'])
+def getOrders(request):
+
+  if request.user.is_authenticated:
+    user = request.user
+
+    # orders = Order.objects.all()
+    order, created  =Order.objects.get_or_create(user=user, complete=False)
+    items = order.orderitem_set.all()
+
+    print('request.user', request.user.id)
+    print('items', items)
+
+    serializer = OrderSerializer(order)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+  else:
+    return Response([],status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+
+
+
 
 # @api_view(['POST'])
 # def productCreate(request):
@@ -61,6 +111,7 @@ from rest_framework.response import Response
 from knox.models import AuthToken
 from .serializers import UserSerializer, RegisterSerializer, LoginSerializer
 
+#============================================Register=============================================
 # Register API
 class RegisterAPI(generics.GenericAPIView):
   serializer_class = RegisterSerializer
@@ -98,22 +149,7 @@ class UserAPI(generics.RetrieveAPIView):
   def get_object(self):
     return self.request.user
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#======================================Product===========================================================
 
 
 
@@ -131,7 +167,6 @@ class ProductViewset(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
         return 
-
 
 
 
